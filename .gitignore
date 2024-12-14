@@ -1,0 +1,13 @@
+# Build directories
+/build/
+/target/
+out/
+bin/
+
+# IntelliJ
+.idea/
+/*.iml
+/*.iws
+
+# Gradle
+.gradle/
