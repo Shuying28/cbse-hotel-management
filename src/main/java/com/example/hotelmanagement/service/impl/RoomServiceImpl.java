@@ -22,13 +22,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room addRoom(String roomNumber, double price, RoomStatus status, RoomType type) {
-        Room room = new Room();
-        room.setRoomNumber(roomNumber);
-        room.setRoomPrice(price);
-        room.setRoomStatus(status);
-        room.setRoomType(type);
-        return roomRepository.save(room);
+    public Room addRoom(Room room) {
+        Room createdRoom = new Room();
+        createdRoom.setRoomNumber(room.getRoomNumber());
+        createdRoom.setRoomPrice(room.getRoomPrice());
+        createdRoom.setRoomStatus(RoomStatus.AVAILABLE);
+        createdRoom.setRoomType(room.getRoomType());
+        // Generates a number between 0000 and 9999
+        String roomPassword = String.format("%04d", (int) (Math.random() * 10000));
+        createdRoom.setRoomPassword(roomPassword);
+        createdRoom.setTargetOccupancy(room.getTargetOccupancy());
+        return roomRepository.save(createdRoom);
     }
 
     @Override
@@ -41,29 +45,27 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room updateRoom(Long roomId, String roomNumber, double price, RoomStatus status, RoomType type) {
-        return roomRepository.findById(roomId).map(room -> {
-            if (roomNumber != null && !roomNumber.equals("null")) {
-                room.setRoomNumber(roomNumber);
+    public Room updateRoom(Long roomId, Room room) {
+        return roomRepository.findById(roomId).map(existingRoom -> {
+            if (room.getRoomNumber() != null && !room.getRoomNumber().equalsIgnoreCase("null")) {
+                existingRoom.setRoomNumber(room.getRoomNumber());
             }
-            if (price >= 0) {
-                room.setRoomPrice(price);
+            if (room.getRoomPrice() > 0) {
+                existingRoom.setRoomPrice(room.getRoomPrice());
             }
-            if (status != null) {
-                room.setRoomStatus(status);
+            if (room.getRoomStatus() != null) {
+                existingRoom.setRoomStatus(room.getRoomStatus());
             }
-            if (type != null) {
-                room.setRoomType(type);
+            if (room.getRoomPassword() != null) {
+                existingRoom.setRoomPassword(room.getRoomPassword());
             }
-            return roomRepository.save(room);
-        }).orElse(null);
-    }
-
-    @Override
-    public Room updateRoomStatus(Long roomId, RoomStatus status) {
-        return roomRepository.findById(roomId).map(room -> {
-            room.setRoomStatus(status);
-            return roomRepository.save(room);
+            if (room.getTargetOccupancy() > 0) {
+                existingRoom.setTargetOccupancy(room.getTargetOccupancy());
+            }
+            if (room.getRoomType() != null) {
+                existingRoom.setRoomType(room.getRoomType());
+            }
+            return roomRepository.save(existingRoom);
         }).orElse(null);
     }
 

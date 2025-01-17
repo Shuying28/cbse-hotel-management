@@ -11,14 +11,10 @@ public interface ReservationService {
     /**
      * Add a new reservation.
      *
-     * @param householdName The name of the household or customer making the reservation.
-     * @param startTime     The start time of the reservation.
-     * @param endTime       The end time of the reservation.
-     * @param roomIds       The IDs of the rooms to reserve.
-     * @param userId        The ID of the user making the reservation.
+     * @param reservation The reservation object to be added.
      * @return The added reservation.
      */
-    Reservation addReservation(String householdName, String startTime, String endTime, List<Long> roomIds, Long userId);
+    Reservation addReservation(Reservation reservation);
 
     /**
      * Delete a reservation.
@@ -44,14 +40,10 @@ public interface ReservationService {
      * Update an existing reservation.
      *
      * @param reservationId The ID of the reservation to update.
-     * @param householdName The updated name of the household or customer.
-     * @param startTime     The updated start time of the reservation.
-     * @param endTime       The updated end time of the reservation.
-     * @param roomIds       The updated list of room IDs to associate with the reservation.
-     * @param userId        The updated user ID managing the reservation.
+     * @param reservation The reservation object to be updated.
      * @return The updated reservation.
      */
-    Reservation updateReservation(Long reservationId, String householdName, String startTime, String endTime, List<Long> roomIds, Long userId);
+    Reservation updateReservation(Long reservationId, Reservation reservation);
 
     /**
      * Retrieve all reservations.

@@ -24,21 +24,15 @@ public class ReservationController {
 	// Add a new reservation.
 	@PostMapping
 	public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-		Reservation createdReservation = reservationService.addReservation(
-				reservation.getHouseholdName(),
-				reservation.getStartTime().toString(),
-				reservation.getEndTime().toString(),
-				reservation.getRooms().stream().map(room -> room.getId()).toList(),
-				reservation.getUser().getId()
-		);
+		Reservation createdReservation = reservationService.addReservation(reservation);
 		return ResponseEntity.ok(createdReservation);
 	}
 
 	// Delete a reservation by ID.
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+	public ResponseEntity<Boolean> deleteReservation(@PathVariable Long id) {
 		boolean deleted = reservationService.deleteReservation(id);
-		return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+		return deleted ? ResponseEntity.ok(true) : ResponseEntity.notFound().build();
 	}
 
 	// Update the status of a reservation.
@@ -46,7 +40,7 @@ public class ReservationController {
 	public ResponseEntity<Reservation> updateReservationStatus(
 			@PathVariable Long id,
 			@RequestParam ReservationStatus status,
-			@RequestParam PaymentStatus paymentStatus
+			@RequestParam(required = false) PaymentStatus paymentStatus
 	) {
 		Reservation updatedReservation = reservationService.updateReservationStatus(id, status, paymentStatus);
 		return ResponseEntity.ok(updatedReservation);
@@ -55,14 +49,7 @@ public class ReservationController {
 	// Update an existing reservation.
 	@PutMapping("/{id}")
 	public ResponseEntity<Reservation> updateReservation(@PathVariable Long id, @RequestBody Reservation reservation) {
-		Reservation updatedReservation = reservationService.updateReservation(
-				id,
-				reservation.getHouseholdName(),
-				reservation.getStartTime().toString(),
-				reservation.getEndTime().toString(),
-				reservation.getRooms().stream().map(room -> room.getId()).toList(),
-				reservation.getUser().getId()
-		);
+		Reservation updatedReservation = reservationService.updateReservation(id, reservation);
 		return ResponseEntity.ok(updatedReservation);
 	}
 

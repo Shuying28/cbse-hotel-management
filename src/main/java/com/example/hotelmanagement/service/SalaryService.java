@@ -26,19 +26,17 @@ public interface SalaryService {
      * Get role salaries by UserRole.
      *
      * @param role The UserRole to search for.
-     * @return A list of RoleSalary objects for the specified role.
+     * @return A RoleSalary object for the specified role.
      */
-    List<RoleSalary> getRoleSalaryByRole(UserRole role);
+    RoleSalary getRoleSalaryByRole(UserRole role);
 
     /**
      * Update an existing role salary.
      *
-     * @param roleSalaryId     The ID of the RoleSalary to update.
-     * @param baseSalary       The updated base salary.
-     * @param salaryPercentage The updated salary percentage.
+     * @param roleSalary     The RoleSalary to update.
      * @return The updated RoleSalary object.
      */
-    RoleSalary updateRoleSalary(Long roleSalaryId, Double baseSalary, Double salaryPercentage);
+    RoleSalary updateRoleSalary(Long roleSalaryId, RoleSalary roleSalary);
 
     /**
      * Update a salary configuration.
@@ -49,6 +47,14 @@ public interface SalaryService {
      * @return The updated Salary object.
      */
     Salary updateSalary(Long salaryId, Double totalRevenue, int totalBookings);
+
+    /**
+     * Add a new salary configuration.
+     *
+     * @param salary The Salary object to be added.
+     * @return The created Salary object.
+     */
+    Salary addSalary(Salary salary);
 
     /**
      * Add a new RoleSalary to an existing Salary.

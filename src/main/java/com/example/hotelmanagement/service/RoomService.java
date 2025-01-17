@@ -19,13 +19,10 @@ public interface RoomService {
     /**
      * Add a new room.
      *
-     * @param roomNumber The unique room number (e.g., "A-101").
-     * @param price      The price per night for the room.
-     * @param status     The initial status of the room (e.g., Available, Reserved, etc.).
-     * @param type       The type of the room (e.g., Single, Double, Suite).
+     * @param room The room object containing details such as roomNumber, roomPrice, etc...
      * @return The added room.
      */
-    Room addRoom(String roomNumber, double price, RoomStatus status, RoomType type);
+    Room addRoom(Room room);
 
     /**
      * Delete a room by its ID.
@@ -39,22 +36,10 @@ public interface RoomService {
      * Update the details of an existing room.
      *
      * @param roomId     The ID of the room to update.
-     * @param roomNumber The updated room number.
-     * @param price      The updated price per night for the room.
-     * @param status     The updated status of the room.
-     * @param type       The updated type of the room (e.g., Single, Double, Suite).
+     * @param room The updated room object.
      * @return The updated room, or null if the room was not found.
      */
-    Room updateRoom(Long roomId, String roomNumber, double price, RoomStatus status, RoomType type);
-
-    /**
-     * Update the status of a room.
-     *
-     * @param roomId The ID of the room.
-     * @param status The new status of the room (e.g., Available, Reserved, etc.).
-     * @return The updated room, or null if the room was not found.
-     */
-    Room updateRoomStatus(Long roomId, RoomStatus status);
+    Room updateRoom(Long roomId, Room room);
 
     /**
      * Retrieve rooms filtered by their status and/or type.

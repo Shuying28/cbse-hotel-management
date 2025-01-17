@@ -31,17 +31,14 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role; // Role of the user (e.g., "Manager", "Employee", "Cleaner", "Customer")
 
-    @Column(name = "salary", nullable = false)
+    @Column(name = "salary")
     private double salary;
 
-    @Column(name = "total_performance", nullable = false)
-    private double totalPerformance; // Performance metric for employees
+    @Column(name = "total_performance")
+    private double totalPerformance; // The performance bonus to add to the salary
 
-    @Column(name = "phone_number", nullable = false, unique = true)
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reservation> reservations; // Orders associated with the user
 
     public User() {}
 
@@ -115,14 +112,6 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
     }
 
     public double getSalary() {

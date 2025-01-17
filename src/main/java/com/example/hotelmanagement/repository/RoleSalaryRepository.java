@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface RoleSalaryRepository extends JpaRepository<RoleSalary, Long> {
-    List<RoleSalary> findByRole(UserRole role);
+    RoleSalary findByRole(UserRole role);
 
     List<RoleSalary> findByRoleOrBaseSalaryOrSalaryPercentage(UserRole role, Double baseSalary, Double salaryPercentage);
 }

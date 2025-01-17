@@ -2,6 +2,8 @@ package com.example.hotelmanagement.entity;
 
 import com.example.hotelmanagement.enums.Enums.ReservationStatus;
 import com.example.hotelmanagement.enums.Enums.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -37,12 +39,13 @@ public class Reservation {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user; // Employee handling the booking
 
-    @Column(name = "start_time", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date endTime;
 
     @Column(name = "total_price", nullable = false)

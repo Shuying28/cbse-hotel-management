@@ -35,7 +35,7 @@ public class SalaryController {
 
 	// Get role salaries by UserRole.
 	@GetMapping("/roles/{role}")
-	public ResponseEntity<List<RoleSalary>> getRoleSalaryByRole(@PathVariable UserRole role) {
+	public ResponseEntity<RoleSalary> getRoleSalaryByRole(@PathVariable UserRole role) {
 		return ResponseEntity.ok(salaryService.getRoleSalaryByRole(role));
 	}
 
@@ -43,11 +43,17 @@ public class SalaryController {
 	@PutMapping("/roles/{id}")
 	public ResponseEntity<RoleSalary> updateRoleSalary(
 			@PathVariable Long id,
-			@RequestParam Double baseSalary,
-			@RequestParam Double salaryPercentage
+			@RequestBody RoleSalary roleSalary
 	) {
-		RoleSalary updatedRoleSalary = salaryService.updateRoleSalary(id, baseSalary, salaryPercentage);
+		RoleSalary updatedRoleSalary = salaryService.updateRoleSalary(id, roleSalary);
 		return ResponseEntity.ok(updatedRoleSalary);
+	}
+
+	// Add a new salary configuration.
+	@PostMapping
+	public ResponseEntity<Salary> addSalary(@RequestBody Salary salary) {
+		Salary createdSalary = salaryService.addSalary(salary);
+		return ResponseEntity.ok(createdSalary);
 	}
 
 	// Update a salary configuration.
@@ -75,9 +81,9 @@ public class SalaryController {
 
 	// Delete a RoleSalary by ID.
 	@DeleteMapping("/roles/{id}")
-	public ResponseEntity<Void> deleteRoleSalary(@PathVariable Long id) {
+	public ResponseEntity<Boolean> deleteRoleSalary(@PathVariable Long id) {
 		boolean deleted = salaryService.deleteRoleSalary(id);
-		return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+		return deleted ? ResponseEntity.ok(true) : ResponseEntity.notFound().build();
 	}
 
 	// Search for role salaries by a keyword.

@@ -15,7 +15,6 @@ import com.example.hotelmanagement.service.ReservationService;
 import com.example.hotelmanagement.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -34,36 +33,37 @@ public class ReservationServiceImpl implements ReservationService {
     private UserRepository userRepository;
 
     @Override
-    public Reservation addReservation(String householdName, String startTime, String endTime, List<Long> roomIds, Long userId) {
-        // get list here
-        List<Room> rooms = roomRepository.findAllById(roomIds);
+    public Reservation addReservation(Reservation reservation) {
+        List<Room> rooms = roomRepository.findAllById(
+                reservation.getRooms().stream().map(Room::getId).toList()
+        );
         if (rooms.isEmpty() || rooms.stream().anyMatch(room -> room.getRoomStatus() != RoomStatus.AVAILABLE)) {
             throw new RuntimeException("One or more rooms are not available.");
         }
 
+        // Validate and fetch user, if present
+        if (reservation.getUser() != null && reservation.getUser().getId() != null) {
+            User user = userRepository.findById(reservation.getUser().getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            reservation.setUser(user);
+        }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Reservation reservation = new Reservation();
-        reservation.setHouseholdName(householdName);
-        reservation.setStartTime(TimeUtil.formatterTime(startTime));
-        reservation.setEndTime(TimeUtil.formatterTime(endTime));
+        reservation.setHouseholdName(reservation.getHouseholdName());
         reservation.setRooms(rooms);
-        reservation.setUser(user);
+        reservation.setStartTime(reservation.getStartTime());
+        reservation.setEndTime(reservation.getEndTime());
         reservation.setReservationStatus(ReservationStatus.NOT_CHECKED_IN);
         reservation.setPaymentStatus(PaymentStatus.UNPAID);
 
-        double totalPrice = TimeUtil.getBetweenDay(startTime, endTime) * rooms.stream().mapToDouble(Room::getRoomPrice).sum();
+        double totalPrice = TimeUtil.getBetweenDay(reservation.getStartTime(), reservation.getEndTime()) *
+                rooms.stream().mapToDouble(Room::getRoomPrice).sum();
         reservation.setTotalPrice(totalPrice);
 
-        // Update Salary
-        Salary salary = salaryRepository.findById(1L).orElse(new Salary());
+        Salary salary = salaryRepository.findById(3L).orElse(new Salary());
         salary.setTotalBookings(salary.getTotalBookings() + 1);
         salary.setTotalRevenue(salary.getTotalRevenue() + totalPrice);
         salaryRepository.save(salary);
 
-        // Update room state
         rooms.forEach(room -> {
             room.setRoomStatus(RoomStatus.RESERVED);
             roomRepository.save(room);
@@ -98,6 +98,7 @@ public class ReservationServiceImpl implements ReservationService {
         // Update status for all associated rooms
         for (Room room : reservation.getRooms()) {
             if (paymentStatus == PaymentStatus.PAID) {
+                reservation.setPaymentStatus(paymentStatus);
                 room.setRoomStatus(RoomStatus.PENDING_CLEANING);
             } else if (reservationStatus == ReservationStatus.CANCELLED) {
                 room.setRoomStatus(RoomStatus.AVAILABLE);
@@ -110,34 +111,58 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation updateReservation(Long reservationId, String householdName, String startTime, String endTime, List<Long> roomIds, Long userId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
-        if (reservation == null) {
-            throw new RuntimeException("Reservation not found.");
+    public Reservation updateReservation(Long reservationId, Reservation reservation) {
+        Reservation existingReservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reservation not found."));
+
+
+        // Update rooms if provided
+        if (reservation.getRooms() != null && !reservation.getRooms().isEmpty()) {
+            List<Room> rooms = roomRepository.findAllById(
+                    reservation.getRooms().stream().map(Room::getId).toList()
+            );
+            if (rooms.isEmpty() || rooms.stream().anyMatch(room -> room.getRoomStatus() != RoomStatus.AVAILABLE)) {
+                throw new RuntimeException("One or more rooms are not available.");
+            }
+            existingReservation.getRooms().forEach(room -> {
+                room.setRoomStatus(RoomStatus.AVAILABLE);
+            });
+            existingReservation.setRooms(rooms);
+
+            rooms.forEach(room -> {
+                room.setRoomStatus(RoomStatus.RESERVED);
+                roomRepository.save(room);
+            });
         }
 
-        List<Room> rooms = roomRepository.findAllById(roomIds);
-        if (rooms.isEmpty() || rooms.stream().anyMatch(room -> room.getRoomStatus() != RoomStatus.AVAILABLE)) {
-            throw new RuntimeException("One or more rooms are not available.");
+        if (reservation.getUser() != null && reservation.getUser().getId() != null) {
+            User user = userRepository.findById(reservation.getUser().getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            existingReservation.setUser(user);
         }
-        rooms.forEach(room -> {
-            room.setRoomStatus(RoomStatus.RESERVED);
-            roomRepository.save(room);
-        });
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (reservation.getHouseholdName() != null) {
+            existingReservation.setHouseholdName(reservation.getHouseholdName());
+        }
 
-        reservation.setHouseholdName(householdName);
-        reservation.setStartTime(TimeUtil.formatterTime(startTime));
-        reservation.setEndTime(TimeUtil.formatterTime(endTime));
-        reservation.setRooms(rooms);
-        reservation.setUser(user);
+        if (reservation.getStartTime() != null) {
+            existingReservation.setStartTime(reservation.getStartTime());
+        }
 
-        double totalPrice = TimeUtil.getBetweenDay(startTime, endTime) * rooms.stream().mapToDouble(Room::getRoomPrice).sum();
-        reservation.setTotalPrice(totalPrice);
+        if (reservation.getEndTime() != null) {
+            existingReservation.setEndTime(reservation.getEndTime());
+        }
 
-        return reservationRepository.save(reservation);
+        // Recalculate total price if startTime, endTime, or rooms have changed
+        if (reservation.getStartTime() != null || reservation.getEndTime() != null || reservation.getRooms() != null) {
+            double totalPrice = TimeUtil.getBetweenDay(
+                    existingReservation.getStartTime(),
+                    existingReservation.getEndTime()
+            ) * existingReservation.getRooms().stream().mapToDouble(Room::getRoomPrice).sum();
+            existingReservation.setTotalPrice(totalPrice);
+        }
+
+        return reservationRepository.save(existingReservation);
     }
 
     @Override

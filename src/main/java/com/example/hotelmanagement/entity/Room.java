@@ -20,7 +20,7 @@ public class Room {
     private double roomPrice; // Price per night
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "room_status", nullable = false)
+    @Column(name = "room_status")
     private RoomStatus roomStatus; // "Deactivated", "Available", "Reserved", "Pending Cleaning"
 
     @Column(name = "room_password")
@@ -32,13 +32,6 @@ public class Room {
 
     @Column(name = "target_occupancy", nullable = false)
     private int targetOccupancy; // Maximum occupancy
-
-    /**
-     *  The relationship is mapped and owned by the rooms field in the Reservation entity.
-     *  Changes to rooms in the Reservation entity control the relationship.
-     */
-    @ManyToMany(mappedBy = "rooms")
-    private List<Reservation> reservations; // Reservations associated with the room
 
     public Room() {}
 
@@ -97,13 +90,4 @@ public class Room {
     public void setTargetOccupancy(int targetOccupancy) {
         this.targetOccupancy = targetOccupancy;
     }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
 }

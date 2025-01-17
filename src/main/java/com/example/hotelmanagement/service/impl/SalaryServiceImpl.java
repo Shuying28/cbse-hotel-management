@@ -31,22 +31,25 @@ public class SalaryServiceImpl implements SalaryService {
     }
 
     @Override
-    public List<RoleSalary> getRoleSalaryByRole(UserRole role) {
+    public RoleSalary getRoleSalaryByRole(UserRole role) {
         return roleSalaryRepository.findByRole(role);
     }
 
     @Override
-    public RoleSalary updateRoleSalary(Long roleSalaryId, Double baseSalary, Double salaryPercentage) {
+    public RoleSalary updateRoleSalary(Long roleSalaryId, RoleSalary roleSalary) {
         Optional<RoleSalary> roleSalaryOptional = roleSalaryRepository.findById(roleSalaryId);
         if (roleSalaryOptional.isPresent()) {
-            RoleSalary roleSalary = roleSalaryOptional.get();
-            if (baseSalary != null) {
-                roleSalary.setBaseSalary(baseSalary);
+            RoleSalary updatedRoleSalary = roleSalaryOptional.get();
+            if (roleSalary.getRole() != null) {
+                updatedRoleSalary.setRole(roleSalary.getRole());
             }
-            if (salaryPercentage != null) {
-                roleSalary.setSalaryPercentage(salaryPercentage);
+            if (roleSalary.getBaseSalary() != null) {
+                updatedRoleSalary.setBaseSalary(roleSalary.getBaseSalary());
             }
-            return roleSalaryRepository.save(roleSalary);
+            if (roleSalary.getSalaryPercentage() != null) {
+                updatedRoleSalary.setSalaryPercentage(roleSalary.getSalaryPercentage());
+            }
+            return roleSalaryRepository.save(updatedRoleSalary);
         }
         throw new RuntimeException("RoleSalary not found for ID: " + roleSalaryId);
     }
@@ -65,6 +68,11 @@ public class SalaryServiceImpl implements SalaryService {
             return salaryRepository.save(salary);
         }
         throw new RuntimeException("Salary configuration not found for ID: " + salaryId);
+    }
+
+    @Override
+    public Salary addSalary(Salary salary) {
+        return salaryRepository.save(salary);
     }
 
     @Override

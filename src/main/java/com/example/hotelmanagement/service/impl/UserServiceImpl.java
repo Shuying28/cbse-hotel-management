@@ -1,7 +1,9 @@
 package com.example.hotelmanagement.service.impl;
 
+import com.example.hotelmanagement.entity.RoleSalary;
 import com.example.hotelmanagement.entity.User;
 import com.example.hotelmanagement.enums.Enums.UserRole;
+import com.example.hotelmanagement.repository.RoleSalaryRepository;
 import com.example.hotelmanagement.repository.UserRepository;
 import com.example.hotelmanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleSalaryRepository roleSalaryRepository;
 
     @Override
     public User getUserById(Long userId) {
@@ -23,12 +27,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(String username, String password, UserRole role) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setRole(role);
-        return userRepository.save(user);
+    public User addUser(User user) {
+        User createdUser = new User();
+        createdUser.setUsername(user.getUsername());
+        createdUser.setRealName(user.getRealName());
+        createdUser.setPassword(user.getPassword());
+        createdUser.setRole(user.getRole());
+        createdUser.setIcNumber(user.getIcNumber());
+        createdUser.setPhoneNumber(user.getPhoneNumber());
+        // Retrieve the salary based on the user's role
+        RoleSalary roleSalary = roleSalaryRepository.findByRole(user.getRole());
+        if (roleSalary != null) {
+            createdUser.setSalary(roleSalary.getBaseSalary());
+        } else {
+            throw new RuntimeException("No salary configuration found for role: " + user.getRole());
+        }
+        return userRepository.save(createdUser);
     }
 
     @Override
@@ -41,33 +55,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long userId, String password, String username, int age, UserRole role, String icNumber, String phoneNumber) {
-        return userRepository.findById(userId).map(user -> {
-            if (password != null && !password.isEmpty()) {
-                user.setPassword(password);
+    public User updateUser(Long userId, User user) {
+        return userRepository.findById(userId).map(existingUser -> {
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                existingUser.setPassword(user.getPassword());
             }
-            if (username != null && !username.isEmpty()) {
-                user.setUsername(username);
+            if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+                existingUser.setUsername(user.getUsername());
             }
-            if (age > 0) {
-                user.setAge(age);
+            if (user.getRealName() != null && !user.getRealName().isEmpty()) {
+                existingUser.setRealName(user.getRealName());
             }
-            if (role != null) {
-                user.setRole(role);
+            if (user.getAge() > 0) {
+                existingUser.setAge(user.getAge());
             }
-            if (icNumber != null && !icNumber.isEmpty()) {
-                user.setIcNumber(icNumber);
+            if (user.getRole() != null) {
+                existingUser.setRole(user.getRole());
+                RoleSalary roleSalary = roleSalaryRepository.findByRole(user.getRole());
+                if (roleSalary != null) {
+                    existingUser.setSalary(roleSalary.getBaseSalary());
+                } else {
+                    throw new RuntimeException("No salary configuration found for role: " + user.getRole());
+                }
             }
-            if (phoneNumber != null && !phoneNumber.isEmpty()) {
-                user.setPhoneNumber(phoneNumber);
+            if (user.getIcNumber() != null && !user.getIcNumber().isEmpty()) {
+                existingUser.setIcNumber(user.getIcNumber());
             }
-            return userRepository.save(user);
+            if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) {
+                existingUser.setPhoneNumber(user.getPhoneNumber());
+            }
+            return userRepository.save(existingUser);
         }).orElse(null);
     }
+
 
     @Override
     public User updatePerformanceBonus(Long userId, double bonus) {
         return userRepository.findById(userId).map(user -> {
+            user.setTotalPerformance(user.getTotalPerformance() + bonus);
             user.setSalary(user.getSalary() + bonus);
             return userRepository.save(user);
         }).orElse(null);

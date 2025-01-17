@@ -13,11 +13,16 @@ public class TimeUtil {
      * @param date2
      * @return
      */
-    public static int getBetweenDay(String date1, String date2) {
+    public static int getBetweenDay(Date date1, Date date2) {
+        if (date1 == null || date2 == null) {
+            throw new IllegalArgumentException("Dates cannot be null");
+        }
+
         Calendar d1 = new GregorianCalendar();
-        d1.setTime(formatterTime(date1));
+        d1.setTime(date1);
         Calendar d2 = new GregorianCalendar();
-        d2.setTime(formatterTime(date2));
+        d2.setTime(date2);
+
         int days = d2.get(Calendar.DAY_OF_YEAR) - d1.get(Calendar.DAY_OF_YEAR);
         int y2 = d2.get(Calendar.YEAR);
         if (d1.get(Calendar.YEAR) != y2) {
@@ -27,17 +32,6 @@ public class TimeUtil {
             } while (d1.get(Calendar.YEAR) != y2);
         }
         return days;
-    }
-
-    public static Date formatterTime(String date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date newDate=null;
-        try {
-            newDate= formatter.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return newDate;
     }
 
 }

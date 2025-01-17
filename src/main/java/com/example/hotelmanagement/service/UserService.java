@@ -17,12 +17,10 @@ public interface UserService {
     /**
      * Add a new user.
      *
-     * @param username The username for the user.
-     * @param password The password for the user.
-     * @param role     The role or permission level of the user.
+     * @param user The User object containing details such as username, password, role, etc...
      * @return The added User object.
      */
-    User addUser(String username, String password, UserRole role);
+    User addUser(User user);
 
     /**
      * Delete a user by user ID.
@@ -35,16 +33,10 @@ public interface UserService {
     /**
      * Update user information.
      *
-     * @param userId      The ID of the user to be updated.
-     * @param password    The new password for the user (optional).
-     * @param username    The new username of the user (optional).
-     * @param age         The age of the user (must be greater than 0).
-     * @param role        The updated role or permission level of the user.
-     * @param icNumber    The updated unique identification number of the user (optional).
-     * @param phoneNumber The updated phone number of the user (optional).
+     * @param user      The user to be updated.
      * @return The updated User object, or null if no user is found with the given ID.
      */
-    User updateUser(Long userId, String password, String username, int age, UserRole role, String icNumber, String phoneNumber);
+    User updateUser(Long userId, User user);
 
     /**
      * Update user performance metrics.

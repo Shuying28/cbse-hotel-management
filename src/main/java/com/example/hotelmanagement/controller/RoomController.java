@@ -31,39 +31,21 @@ public class RoomController {
 	// Add a new room.
 	@PostMapping
 	public ResponseEntity<Room> addRoom(@RequestBody Room room) {
-		Room createdRoom = roomService.addRoom(
-				room.getRoomNumber(),
-				room.getRoomPrice(),
-				room.getRoomStatus(),
-				room.getRoomType()
-		);
+		Room createdRoom = roomService.addRoom(room);
 		return ResponseEntity.ok(createdRoom);
 	}
 
 	// Delete a room by its ID.
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteRoom(@PathVariable Long id) {
+	public ResponseEntity<Boolean> deleteRoom(@PathVariable Long id) {
 		boolean deleted = roomService.deleteRoom(id);
-		return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+		return deleted ? ResponseEntity.ok(true) : ResponseEntity.notFound().build();
 	}
 
 	// Update the details of an existing room.
 	@PutMapping("/{id}")
 	public ResponseEntity<Room> updateRoom(@PathVariable Long id, @RequestBody Room room) {
-		Room updatedRoom = roomService.updateRoom(
-				id,
-				room.getRoomNumber(),
-				room.getRoomPrice(),
-				room.getRoomStatus(),
-				room.getRoomType()
-		);
-		return updatedRoom != null ? ResponseEntity.ok(updatedRoom) : ResponseEntity.notFound().build();
-	}
-
-	// Update the status of a room.
-	@PatchMapping("/{id}/status")
-	public ResponseEntity<Room> updateRoomStatus(@PathVariable Long id, @RequestParam RoomStatus status) {
-		Room updatedRoom = roomService.updateRoomStatus(id, status);
+		Room updatedRoom = roomService.updateRoom(id, room);
 		return updatedRoom != null ? ResponseEntity.ok(updatedRoom) : ResponseEntity.notFound().build();
 	}
 
