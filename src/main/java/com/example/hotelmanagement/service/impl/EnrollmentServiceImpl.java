@@ -1,12 +1,12 @@
-package com.example.studentmanagement.service.impl;
+package com.example.hotelmanagement.service.impl;
 
-import com.example.studentmanagement.entity.Course;
-import com.example.studentmanagement.entity.Enrollment;
-import com.example.studentmanagement.entity.Student;
-import com.example.studentmanagement.repository.CourseRepository;
-import com.example.studentmanagement.repository.EnrollmentRepository;
-import com.example.studentmanagement.repository.StudentRepository;
-import com.example.studentmanagement.service.EnrollmentService;
+import com.example.hotelmanagement.entity.Course;
+import com.example.hotelmanagement.entity.Enrollment;
+import com.example.hotelmanagement.entity.Student;
+import com.example.hotelmanagement.repository.CourseRepository;
+import com.example.hotelmanagement.repository.EnrollmentRepository;
+import com.example.hotelmanagement.repository.StudentRepository;
+import com.example.hotelmanagement.service.EnrollmentService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

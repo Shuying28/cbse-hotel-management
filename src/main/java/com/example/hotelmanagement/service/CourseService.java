@@ -1,6 +1,6 @@
-package com.example.studentmanagement.service;
+package com.example.hotelmanagement.service;
 
-import com.example.studentmanagement.entity.Course;
+import com.example.hotelmanagement.entity.Course;
 import java.util.List;
 
 public interface CourseService {

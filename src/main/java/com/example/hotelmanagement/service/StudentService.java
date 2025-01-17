@@ -1,7 +1,7 @@
-package com.example.studentmanagement.service;
+package com.example.hotelmanagement.service;
 import java.util.List;
 
-import com.example.studentmanagement.entity.Student;
+import com.example.hotelmanagement.entity.Student;
 public interface StudentService {
 	List<Student> getAllStudents();
 	

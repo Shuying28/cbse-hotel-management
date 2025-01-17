@@ -1,19 +1,18 @@
 package com.example.hotelmanagement.repository;
 
-import com.example.hotelmanagement.entity.Course;
+import com.example.hotelmanagement.entity.User;
+import com.example.hotelmanagement.enums.Enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Course, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
 
-    @Query("SELECT c FROM Course c JOIN c.students s WHERE s.id = :studentId")
-    List<Course> findByStudentId(@Param("studentId") Long studentId);
+    List<User> findByRole(UserRole role);
 
-    @Query("SELECT c FROM Course c WHERE c.registrationStatus = 'OPEN'")
-    List<Course> findAvailableCourses();
+    List<User> findByUsernameContainingIgnoreCaseOrRealNameContainingIgnoreCase(String username, String realName);
 }

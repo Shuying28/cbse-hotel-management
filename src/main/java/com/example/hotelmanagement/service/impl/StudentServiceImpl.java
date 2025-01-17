@@ -1,13 +1,13 @@
-package com.example.studentmanagement.service.impl;
+package com.example.hotelmanagement.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.studentmanagement.entity.Student;
-import com.example.studentmanagement.repository.StudentRepository;
-import com.example.studentmanagement.service.StudentService;
+import com.example.hotelmanagement.entity.Student;
+import com.example.hotelmanagement.repository.StudentRepository;
+import com.example.hotelmanagement.service.StudentService;
 
 @Service
 public class StudentServiceImpl implements StudentService{

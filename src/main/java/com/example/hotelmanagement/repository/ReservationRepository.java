@@ -1,19 +1,13 @@
 package com.example.hotelmanagement.repository;
 
-import com.example.hotelmanagement.entity.Course;
+import com.example.hotelmanagement.entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface CourseRepository extends JpaRepository<Course, Long> {
-
-    @Query("SELECT c FROM Course c JOIN c.students s WHERE s.id = :studentId")
-    List<Course> findByStudentId(@Param("studentId") Long studentId);
-
-    @Query("SELECT c FROM Course c WHERE c.registrationStatus = 'OPEN'")
-    List<Course> findAvailableCourses();
+public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+    // Derived Query Method
+    List<Reservation> findByHouseholdNameContainingIgnoreCaseOrUser_UsernameContainingIgnoreCase(String householdName, String userName);
 }

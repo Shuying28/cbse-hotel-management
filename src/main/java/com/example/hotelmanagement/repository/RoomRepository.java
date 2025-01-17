@@ -1,19 +1,20 @@
 package com.example.hotelmanagement.repository;
 
-import com.example.hotelmanagement.entity.Course;
+import com.example.hotelmanagement.entity.Room;
+import com.example.hotelmanagement.enums.Enums.RoomStatus;
+import com.example.hotelmanagement.enums.Enums.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Course, Long> {
+public interface RoomRepository extends JpaRepository<Room, Long> {
+    List<Room> findByRoomStatusAndRoomType(RoomStatus status, RoomType type);
 
-    @Query("SELECT c FROM Course c JOIN c.students s WHERE s.id = :studentId")
-    List<Course> findByStudentId(@Param("studentId") Long studentId);
+    List<Room> findByRoomStatus(RoomStatus status);
 
-    @Query("SELECT c FROM Course c WHERE c.registrationStatus = 'OPEN'")
-    List<Course> findAvailableCourses();
+    List<Room> findByRoomType(RoomType type);
+
+    List<Room> findByRoomNumberContainingIgnoreCaseOrRoomType(String roomNumber, RoomType roomType);
 }

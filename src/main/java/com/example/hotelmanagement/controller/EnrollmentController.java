@@ -1,10 +1,9 @@
-package com.example.studentmanagement.controller;
+package com.example.hotelmanagement.controller;
 
-import com.example.studentmanagement.entity.Course;
-import com.example.studentmanagement.entity.Student;
-import com.example.studentmanagement.service.CourseService;
-import com.example.studentmanagement.service.EnrollmentService;
-import com.example.studentmanagement.service.StudentService;
+import com.example.hotelmanagement.entity.Course;
+import com.example.hotelmanagement.entity.Student;
+import com.example.hotelmanagement.service.EnrollmentService;
+import com.example.hotelmanagement.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

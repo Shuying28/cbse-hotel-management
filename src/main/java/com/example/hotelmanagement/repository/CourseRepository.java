@@ -1,6 +1,6 @@
-package com.example.studentmanagement.repository;
+package com.example.hotelmanagement.repository;
 
-import com.example.studentmanagement.entity.Course;
+import com.example.hotelmanagement.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

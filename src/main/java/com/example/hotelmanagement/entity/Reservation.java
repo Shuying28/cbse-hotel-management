@@ -1,36 +1,62 @@
 package com.example.hotelmanagement.entity;
 
+import com.example.hotelmanagement.enums.Enums.ReservationStatus;
+import com.example.hotelmanagement.enums.Enums.PaymentStatus;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "reservations")
+public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "room_id", nullable = false)
-    private Long roomId;
+    @Column(name = "household_name", nullable = false)
+    private String householdName; // Name of the customer
 
+    /**
+     * @JoinTable specifies the join table reservation_rooms that links the two entities in the database.
+     * joinColumns = @JoinColumn(name = "reservation_id") indicates that the reservation_id column in the join table should reference the primary key (id) of the Reservation entity.
+     * inverseJoinColumns = @JoinColumn(name = "room_id") indicates that the room_id column in the join table should reference the primary key (id) of the Room entity.
+     * JPA/Hibernate knows the primary key field for each entity based on the @Id annotation.
+     * When we specify joinColumns and inverseJoinColumns, JPA automatically looks up the @Id field in the respective entity (Reservation and Room) and maps the join table columns (reservation_id and room_id) to those fields.
+     */
+    @ManyToMany
+    @JoinTable(
+            name = "reservation_rooms",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "room_id")
+    )
+    private List<Room> rooms; // Rooms associated with the reservation
+
+    /**
+     * The user_id column in the reservations table acts as a foreign key that links to the primary key (id) in the users table
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User user; // Employee handling the booking
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime; // Reservation start time
+    private Date startTime;
 
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime; // Reservation end time
+    private Date endTime;
 
     @Column(name = "total_price", nullable = false)
-    private double totalPrice; // Total price for the reservation
+    private double totalPrice;
 
-    @Column(name = "current_status", nullable = false)
-    private String currentStatus; // Order status (e.g., "Paid", "Unpaid", "Checked-In", "Not Checked-In", "Cancelled")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "reservation_status", nullable = false)
+    private ReservationStatus reservationStatus; // "Checked-In", "Not Checked-In", "Checked-Out", "Cancelled"
 
-    public Order() {}
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status", nullable = false)
+    private PaymentStatus paymentStatus; // "Paid", "Unpaid"
+
+    public Reservation() {}
 
     public Long getId() {
         return id;
@@ -40,12 +66,12 @@ public class Order {
         this.id = id;
     }
 
-    public Long getRoomId() {
-        return roomId;
+    public List<Room> getRooms() {
+        return rooms;
     }
 
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     public User getUser() {
@@ -56,19 +82,19 @@ public class Order {
         this.user = user;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -80,11 +106,27 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public String getCurrentStatus() {
-        return currentStatus;
+    public ReservationStatus getReservationStatus() {
+        return reservationStatus;
     }
 
-    public void setCurrentStatus(String currentStatus) {
-        this.currentStatus = currentStatus;
+    public void setReservationStatus(ReservationStatus reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
+
+    public String getHouseholdName() {
+        return householdName;
+    }
+
+    public void setHouseholdName(String householdName) {
+        this.householdName = householdName;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

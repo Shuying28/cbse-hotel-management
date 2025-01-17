@@ -1,8 +1,7 @@
-package com.example.studentmanagement.service;
+package com.example.hotelmanagement.service;
 
-import com.example.studentmanagement.entity.Course;
-import com.example.studentmanagement.entity.Enrollment;
-import com.example.studentmanagement.entity.Student;
+import com.example.hotelmanagement.entity.Course;
+import com.example.hotelmanagement.entity.Enrollment;
 
 import java.util.List;
 

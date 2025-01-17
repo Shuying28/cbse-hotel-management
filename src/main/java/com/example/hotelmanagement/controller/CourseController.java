@@ -1,7 +1,7 @@
-package com.example.studentmanagement.controller;
+package com.example.hotelmanagement.controller;
 
-import com.example.studentmanagement.entity.Course;
-import com.example.studentmanagement.service.CourseService;
+import com.example.hotelmanagement.entity.Course;
+import com.example.hotelmanagement.service.CourseService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

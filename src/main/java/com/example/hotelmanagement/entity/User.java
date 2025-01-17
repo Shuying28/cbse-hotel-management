@@ -1,39 +1,50 @@
 package com.example.hotelmanagement.entity;
 
+import com.example.hotelmanagement.enums.Enums.UserRole;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Order ID
+    private Long id;
 
-    @Column(name = "room_id", nullable = false)
-    private Long roomId; // Associated Room ID
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user; // Associated User
+    @Column(name = "password", nullable = false)
+    private String password;
 
-    @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime; // Reservation start time
+    @Column(name = "real_name", nullable = false)
+    private String realName;
 
-    @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime; // Reservation end time
+    @Column(name = "age", nullable = false)
+    private int age;
 
-    @Column(name = "total_price", nullable = false)
-    private double totalPrice; // Total price for the reservation
+    @Column(name = "ic_number", nullable = false, unique = true)
+    private String icNumber;
 
-    @Column(name = "current_status", nullable = false)
-    private String currentStatus; // Order status (e.g., "Paid", "Unpaid", "Checked-In", "Not Checked-In", "Cancelled")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private UserRole role; // Role of the user (e.g., "Manager", "Employee", "Cleaner", "Customer")
 
-    // Default constructor
-    public Order() {}
+    @Column(name = "salary", nullable = false)
+    private double salary;
 
-    // Getters and Setters
+    @Column(name = "total_performance", nullable = false)
+    private double totalPerformance; // Performance metric for employees
+
+    @Column(name = "phone_number", nullable = false, unique = true)
+    private String phoneNumber;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations; // Orders associated with the user
+
+    public User() {}
+
     public Long getId() {
         return id;
     }
@@ -42,51 +53,83 @@ public class Order {
         this.id = id;
     }
 
-    public Long getRoomId() {
-        return roomId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public User getUser() {
-        return user;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public int getAge() {
+        return age;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setAge(int age) {
+        this.age = age;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public String getIcNumber() {
+        return icNumber;
     }
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setIcNumber(String icNumber) {
+        this.icNumber = icNumber;
     }
 
-    public String getCurrentStatus() {
-        return currentStatus;
+    public UserRole getRole() {
+        return role;
     }
 
-    public void setCurrentStatus(String currentStatus) {
-        this.currentStatus = currentStatus;
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public double getTotalPerformance() {
+        return totalPerformance;
+    }
+
+    public void setTotalPerformance(double totalPerformance) {
+        this.totalPerformance = totalPerformance;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
     }
 }

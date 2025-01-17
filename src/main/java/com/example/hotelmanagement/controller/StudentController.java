@@ -1,4 +1,4 @@
-package com.example.studentmanagement.controller;
+package com.example.hotelmanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -6,10 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.studentmanagement.entity.Student;
-import com.example.studentmanagement.service.StudentService;
-import com.example.studentmanagement.service.CourseService;
-import com.example.studentmanagement.service.EnrollmentService;
+import com.example.hotelmanagement.entity.Student;
+import com.example.hotelmanagement.service.StudentService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
