@@ -1,11 +1,8 @@
 package com.example.hotelmanagement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.example.hotelmanagement.repository.StudentRepository;
 
 @SpringBootApplication
 public class SmartHotelManagerApplication implements CommandLineRunner{

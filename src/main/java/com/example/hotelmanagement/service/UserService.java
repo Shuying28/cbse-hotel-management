@@ -1,6 +1,5 @@
 package com.example.hotelmanagement.service;
 
-import com.example.hotelmanagement.entity.Course;
 import com.example.hotelmanagement.entity.User;
 import com.example.hotelmanagement.enums.Enums.UserRole;
 

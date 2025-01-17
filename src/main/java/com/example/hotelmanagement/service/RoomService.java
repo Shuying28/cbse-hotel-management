@@ -1,6 +1,5 @@
 package com.example.hotelmanagement.service;
 
-import com.example.hotelmanagement.entity.Course;
 import com.example.hotelmanagement.entity.Room;
 import com.example.hotelmanagement.enums.Enums.RoomType;
 import com.example.hotelmanagement.enums.Enums.RoomStatus;
