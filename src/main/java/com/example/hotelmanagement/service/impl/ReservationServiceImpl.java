@@ -60,8 +60,8 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setTotalPrice(totalPrice);
 
         Salary salary = salaryRepository.findById(3L).orElse(new Salary());
-        salary.setTotalBookings(salary.getTotalBookings() + 1);
-        salary.setTotalRevenue(salary.getTotalRevenue() + totalPrice);
+        salary.incrementTotalBookings();
+        salary.incrementTotalRevenue(totalPrice);
         salaryRepository.save(salary);
 
         rooms.forEach(room -> {

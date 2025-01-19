@@ -30,7 +30,6 @@ public class Enums {
         MANAGER,
         EMPLOYEE,
         CLEANER,
-        CUSTOMER;
     }
 
     // Payment Method Enum
